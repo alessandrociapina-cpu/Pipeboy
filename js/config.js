@@ -1,22 +1,27 @@
 // ===== Pipeboy — Configuração global =====
 const CONFIG = {
-  W: 900,               // largura do canvas (viewport)
-  H: 480,               // altura do canvas
-  GROUND_Y: 400,        // linha do chão (topo do asfalto)
-  GRAVITY: 0.55,
-  MOVE_SPEED: 2.1,      // ritmo mais calmo
-  JUMP_V: -11,
-  LEVEL_WIDTH: 3000,    // comprimento total da fase (mundo)
+  W: 1200,              // canvas maior
+  H: 600,
+  GROUND_Y: 470,        // linha do chão
+  GRAVITY: 0.62,
+  MOVE_SPEED: 2.8,
+  JUMP_V: -13,
+  LEVEL_WIDTH: 3400,
 
   PLAYER_HP: 100,
 
-  // materiais exigidos pela obra para concluir a fase
-  REQUIREMENTS: { tubo: 5, tampao: 2, cone: 2 },
+  // materiais exigidos pela obra
+  REQUIREMENTS: { tubo: 5, tampao: 4, cone: 2 },
+  BUILD_MATERIALS: ['tubo', 'tampao'], // limitam o TETO da barra de progresso
+  CONE_KEY: 'cone',                     // habilita os funcionários a trabalhar
 
-  // power-ups (duração em frames a ~60fps)
-  BACKHOE_TIME: 60 * 11,   // retroescavadeira: ~11s
-  BACKHOE_CAP: 8,          // quantos materiais leva de uma vez
-  SAPINHO_TIME: 60 * 11,   // sapinho: ~11s
+  // progresso da obra
+  MAX_WORKERS: 5,
+  PROGRESS_PER_WORKER: 0.028, // % por frame por funcionário (1 ~60s, 5 ~12s)
+
+  // power-up
+  BACKHOE_TIME: 60 * 12,   // retroescavadeira ~12s
+  BACKHOE_CAP: 8,
 
   // pontuação
   SCORE_DELIVER: 100,
@@ -27,22 +32,29 @@ const CONFIG = {
     sky: '#6ec6ff',
     skyFar: '#a9dcff',
     asphalt: '#2b2f36',
-    asphaltLine: '#4a515b',
+    asphaltDark: '#23272d',
+    asphaltLine: '#e8c34a',
     dirt: '#6b4a2b',
     dirtDark: '#4d3620',
     helmet: '#1e6fd0',
+    helmetDark: '#0f4f9a',
     vest: '#ff8c1a',
-    skin: '#b9764a',       // pele mais bronzeada
+    vestDark: '#c96a00',
+    reflect: '#eaf2fa',
+    skin: '#b9764a',
     skinDark: '#9c5f38',
     pants: '#33414f',
+    pantsDark: '#26313c',
+    boot: '#20242a',
     lodo: '#6b8e23',
     grease: '#e8c96b',
-    trench: '#241a10',
-    machine: '#f2c200',    // amarelo maquinário
+    trench: '#1c140c',
+    machine: '#f2c200',
     machineDark: '#c99a00',
+    workerVest: '#ffd400',
+    workerVestDark: '#d9b400',
   },
 
-  // nomes amigáveis dos materiais
   NAMES: {
     tubo: 'Tubos',
     tampao: 'Tampões',
