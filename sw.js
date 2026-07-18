@@ -1,5 +1,5 @@
 // ===== Pipeboy — Service Worker (app shell offline) =====
-const CACHE = 'pipeboy-v1';
+const CACHE = 'pipeboy-v2';
 
 // caminhos relativos ao local do sw.js (funciona em subpasta, ex.: /Pipeboy/)
 const ASSETS = [
@@ -8,6 +8,7 @@ const ASSETS = [
   './manifest.webmanifest',
   './css/style.css',
   './js/config.js',
+  './js/audio.js',
   './js/sprites.js',
   './js/entities.js',
   './js/game.js',
