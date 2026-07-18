@@ -1,52 +1,84 @@
-// ===== Pipeboy — Sprites desenhados via Canvas (sem assets externos) =====
+// ===== Pipeboy — Sprites desenhados via Canvas (maiores e mais detalhados) =====
 const Sprites = {
-  r(ctx, x, y, w, h, color) {
-    ctx.fillStyle = color;
-    ctx.fillRect(x, y, w, h);
+  r(ctx, x, y, w, h, color) { ctx.fillStyle = color; ctx.fillRect(x, y, w, h); },
+
+  // membro em dois tons (sombra à direita e embaixo)
+  limb(ctx, x, y, w, h, col, dark) {
+    ctx.fillStyle = col; ctx.fillRect(x, y, w, h);
+    ctx.fillStyle = dark; ctx.fillRect(x + w - 2, y, 2, h); ctx.fillRect(x, y + h - 2, w, 2);
   },
 
-  // ---- GEORGE SANEAR (a pé) ----
+  shadow(ctx, cx, cy, rx) {
+    ctx.fillStyle = 'rgba(0,0,0,0.22)';
+    ctx.beginPath(); ctx.ellipse(cx, cy, rx, rx * 0.28, 0, 0, Math.PI * 2); ctx.fill();
+  },
+
+  // ---- GEORGE SANEAR (a pé) — ~94px ----
   george(ctx, x, y, facing, walk, attacking, carrying) {
     const C = CONFIG.COLORS;
     ctx.save();
     ctx.translate(x, y);
     if (facing < 0) ctx.scale(-1, 1);
+    const step = Math.sin(walk) * 6;
 
-    const step = Math.sin(walk) * 3;
+    this.shadow(ctx, 0, 92, 24);
 
-    // pernas
-    this.r(ctx, -8, 34, 7, 16 - step, C.pants);
-    this.r(ctx, 2, 34, 7, 16 + step, C.pants);
-    this.r(ctx, -9, 49 - step, 9, 5, '#1a1a1a');
-    this.r(ctx, 1, 49 + step, 9, 5, '#1a1a1a');
+    // PERNAS
+    this.limb(ctx, -12, 64, 11, 26 - step, C.pants, C.pantsDark);
+    this.limb(ctx, 3, 64, 11, 26 + step, C.pants, C.pantsDark);
+    // BOTAS
+    this.r(ctx, -15, 86 - step, 16, 9, C.boot); this.r(ctx, -15, 92 - step, 16, 3, '#000');
+    this.r(ctx, 1, 86 + step, 16, 9, C.boot);  this.r(ctx, 1, 92 + step, 16, 3, '#000');
 
-    // colete laranja fluorescente
-    this.r(ctx, -10, 12, 20, 24, C.vest);
-    this.r(ctx, -10, 18, 20, 3, '#dfe9f2');
-    this.r(ctx, -10, 28, 20, 3, '#dfe9f2');
-    this.r(ctx, -1, 12, 2, 24, '#c96a00');
+    // TORSO — colete
+    this.r(ctx, -17, 36, 34, 36, C.vest);
+    this.r(ctx, 13, 36, 4, 36, C.vestDark);         // sombra lateral
+    this.r(ctx, -17, 68, 34, 4, C.vestDark);        // barra inferior
+    // camisa/gola
+    this.r(ctx, -6, 34, 12, 8, '#dfe7ee');
+    // faixas refletivas
+    this.r(ctx, -17, 46, 34, 5, C.reflect);
+    this.r(ctx, -17, 58, 34, 5, C.reflect);
+    // zíper
+    this.r(ctx, -1, 36, 2, 36, C.vestDark);
 
-    // braço / picareta
+    // BRAÇO + ferramenta
     if (attacking) {
-      this.r(ctx, 8, 10, 6, 6, C.skin);
-      this.r(ctx, 14, 6, 3, 18, '#8a5a2b');
-      this.r(ctx, 10, 4, 14, 4, '#9aa3ad');
+      // braço estendido para cima/frente
+      this.limb(ctx, 8, 34, 10, 8, C.vest, C.vestDark);
+      this.r(ctx, 16, 30, 8, 8, C.skin);
+      // picareta
+      ctx.save();
+      ctx.translate(22, 30); ctx.rotate(-0.5);
+      this.r(ctx, -2, -4, 5, 30, '#7a5326');   // cabo
+      this.r(ctx, -12, -8, 26, 6, '#aab3bd');  // cabeça de metal
+      this.r(ctx, -12, -8, 26, 2, '#cfd6de');
+      ctx.restore();
     } else {
-      this.r(ctx, 8, 16, 6, 12, C.skin);
+      this.limb(ctx, 10, 40, 10, 18, C.vest, C.vestDark);   // manga
+      this.r(ctx, 11, 56, 9, 9, C.skin);                    // mão
     }
 
-    // cabeça (pele bronzeada)
-    this.r(ctx, -7, 0, 14, 13, C.skin);
-    this.r(ctx, -7, 10, 14, 3, C.skinDark); // sombra do queixo
-    // capacete azul
-    this.r(ctx, -9, -4, 18, 8, C.helmet);
-    this.r(ctx, -9, 2, 18, 2, '#0f4f9a');
-    this.r(ctx, -2, -7, 4, 3, '#0f4f9a');
+    // PESCOÇO
+    this.r(ctx, -6, 32, 12, 8, C.skinDark);
+    // CABEÇA
+    this.r(ctx, -13, 12, 26, 24, C.skin);
+    this.r(ctx, -13, 30, 26, 6, C.skinDark);   // sombra do queixo
+    this.r(ctx, -15, 20, 3, 7, C.skin);        // orelha (lado de trás)
     // rosto
-    this.r(ctx, 3, 5, 2, 2, '#222');
-    this.r(ctx, -6, 8, 6, 2, C.skinDark);
+    this.r(ctx, 3, 16, 6, 2, '#5a3a20');       // sobrancelha
+    this.r(ctx, 4, 19, 5, 5, '#20242a');       // olho
+    this.r(ctx, 10, 22, 3, 6, C.skinDark);     // nariz
+    this.r(ctx, -3, 28, 13, 3, '#5a3a20');     // bigode
+    // CAPACETE
+    ctx.fillStyle = C.helmet;
+    ctx.beginPath(); ctx.arc(0, 12, 16, Math.PI, 0); ctx.closePath(); ctx.fill();
+    this.r(ctx, -16, 10, 32, 5, C.helmet);
+    this.r(ctx, -20, 14, 40, 5, C.helmetDark); // aba
+    this.r(ctx, -2, -6, 4, 18, C.helmetDark);  // crista
+    this.r(ctx, -11, 2, 9, 4, '#4a9be0');      // brilho
 
-    if (carrying) this.itemMini(ctx, -8, -22, carrying);
+    if (carrying) { ctx.save(); ctx.translate(-13, -18); this.itemIcon(ctx, carrying, 26); ctx.restore(); }
 
     ctx.restore();
   },
@@ -58,307 +90,277 @@ const Sprites = {
     ctx.translate(x, y);
     if (facing < 0) ctx.scale(-1, 1);
 
-    // sombra
-    ctx.fillStyle = 'rgba(0,0,0,0.25)';
-    ctx.fillRect(-26, 60, 64, 5);
+    this.shadow(ctx, 6, 96, 46);
 
-    // rodas grandes
-    ctx.fillStyle = '#1a1a1a';
-    ctx.beginPath(); ctx.arc(-14, 54, 11, 0, Math.PI * 2); ctx.fill();
-    ctx.beginPath(); ctx.arc(20, 54, 14, 0, Math.PI * 2); ctx.fill();
-    ctx.fillStyle = '#555';
-    ctx.beginPath(); ctx.arc(-14, 54, 4, 0, Math.PI * 2); ctx.fill();
-    ctx.beginPath(); ctx.arc(20, 54, 5, 0, Math.PI * 2); ctx.fill();
+    // rodas
+    ctx.fillStyle = '#15181c';
+    ctx.beginPath(); ctx.arc(-20, 84, 16, 0, 7); ctx.fill();
+    ctx.beginPath(); ctx.arc(28, 84, 20, 0, 7); ctx.fill();
+    ctx.fillStyle = '#4a4f57';
+    ctx.beginPath(); ctx.arc(-20, 84, 6, 0, 7); ctx.fill();
+    ctx.beginPath(); ctx.arc(28, 84, 8, 0, 7); ctx.fill();
 
-    // corpo amarelo
-    this.r(ctx, -24, 30, 52, 20, C.machine);
-    this.r(ctx, -24, 30, 52, 4, '#ffe066');
-    this.r(ctx, -24, 46, 52, 4, C.machineDark);
+    // corpo
+    this.r(ctx, -34, 48, 74, 28, C.machine);
+    this.r(ctx, -34, 48, 74, 5, '#ffe066');
+    this.r(ctx, -34, 70, 74, 6, C.machineDark);
     // cabine
-    this.r(ctx, -20, 8, 24, 24, C.machine);
-    this.r(ctx, -18, 12, 20, 16, '#bfe3ff'); // vidro
-    // George dentro (capacete + rosto)
-    this.r(ctx, -12, 12, 12, 10, C.skin);
-    this.r(ctx, -13, 8, 14, 6, C.helmet);
-    this.r(ctx, -4, 15, 2, 2, '#222');
+    this.r(ctx, -28, 14, 34, 36, C.machine);
+    this.r(ctx, -25, 20, 28, 24, '#bfe3ff');
+    // George dentro
+    this.r(ctx, -18, 20, 16, 14, C.skin);
+    this.r(ctx, -20, 12, 20, 9, C.helmet);
+    this.r(ctx, -6, 25, 3, 3, '#20242a');
+    // braço + caçamba
+    this.r(ctx, 8, 34, 30, 7, C.machineDark);
+    this.r(ctx, 36, 30, 8, 24, C.machineDark);
+    this.r(ctx, 40, 46, 20, 18, C.machine);
+    this.r(ctx, 40, 60, 20, 4, '#7a5a10');
+    ctx.fillStyle = '#2b2f36';
+    for (let i = 0; i < 4; i++) ctx.fillRect(43 + i * 5, 64, 3, 4);
 
-    // braço hidráulico + caçamba (à frente)
-    this.r(ctx, 6, 22, 22, 5, C.machineDark);
-    this.r(ctx, 26, 20, 6, 16, C.machineDark);
-    this.r(ctx, 30, 30, 14, 12, C.machine); // caçamba
-    this.r(ctx, 30, 40, 14, 3, '#7a5a10');
-    // dentes da caçamba
-    ctx.fillStyle = '#333';
-    for (let i = 0; i < 3; i++) this.r(ctx, 32 + i * 4, 42, 2, 3, '#333');
-
-    // carga de tubos na traseira
+    // carga de tubos
     for (let i = 0; i < Math.min(load, 8); i++) {
       const col = i % 4, row = Math.floor(i / 4);
-      this.r(ctx, -22 + col * 6, 22 - row * 6, 5, 5, '#2e86de');
+      this.r(ctx, -30 + col * 8, 34 - row * 8, 7, 7, '#2e86de');
+      this.r(ctx, -30 + col * 8, 34 - row * 8, 7, 2, '#5aa9f0');
     }
     if (load > 0) {
-      ctx.fillStyle = '#fff';
-      ctx.font = 'bold 11px monospace';
-      if (facing < 0) { ctx.save(); ctx.scale(-1, 1); ctx.fillText('x' + load, -6, 4); ctx.restore(); }
-      else ctx.fillText('x' + load, -22, 4);
+      ctx.fillStyle = '#fff'; ctx.font = 'bold 14px monospace';
+      if (facing < 0) { ctx.save(); ctx.scale(-1, 1); ctx.fillText('x' + load, -8, 6); ctx.restore(); }
+      else ctx.fillText('x' + load, -30, 6);
     }
-
     ctx.restore();
   },
 
-  // ---- GEORGE com o SAPINHO (compactador) ----
-  sapinho(ctx, x, y, facing, walk, attacking) {
-    const C = CONFIG.COLORS;
-    // desenha o George base
-    this.george(ctx, x, y, facing, walk, false, null);
-    ctx.save();
-    ctx.translate(x, y);
-    if (facing < 0) ctx.scale(-1, 1);
-    // compactador (placa + motor + cabo) à frente
-    const drop = attacking ? 6 : 0;
-    this.r(ctx, 12, 20, 6, 20, '#444');            // cabo
-    this.r(ctx, 8, 34 + drop, 20, 8, C.machine);   // motor
-    this.r(ctx, 6, 44 + drop, 24, 6, '#333');      // placa base
-    this.r(ctx, 8, 34 + drop, 20, 2, '#ffe066');
-    ctx.restore();
-    // onda de impacto ao esmagar
-    if (attacking) {
-      ctx.save();
-      ctx.strokeStyle = 'rgba(255,220,80,0.8)';
-      ctx.lineWidth = 3;
-      ctx.beginPath();
-      ctx.arc(x, y + 50, 30, Math.PI, 0);
-      ctx.stroke();
-      ctx.restore();
-    }
-  },
-
-  itemMini(ctx, x, y, type) {
-    ctx.save(); ctx.translate(x, y); this.itemIcon(ctx, type, 16); ctx.restore();
-  },
+  itemMini(ctx, x, y, type) { ctx.save(); ctx.translate(x, y); this.itemIcon(ctx, type, 22); ctx.restore(); },
 
   // ---- ÍCONES DE MATERIAIS ----
   itemIcon(ctx, type, s) {
     switch (type) {
       case 'tubo':
         this.r(ctx, 0, s * 0.3, s, s * 0.4, '#2e86de');
-        this.r(ctx, 0, s * 0.3, s, 3, '#5aa9f0');
-        this.r(ctx, -2, s * 0.25, 4, s * 0.5, '#1b5fb0');
-        this.r(ctx, s - 2, s * 0.25, 4, s * 0.5, '#1b5fb0');
+        this.r(ctx, 0, s * 0.3, s, s * 0.12, '#5aa9f0');
+        this.r(ctx, -2, s * 0.24, 4, s * 0.52, '#1b5fb0');
+        this.r(ctx, s - 2, s * 0.24, 4, s * 0.52, '#1b5fb0');
         break;
       case 'cone':
-        this.r(ctx, s * 0.35, 2, s * 0.3, s * 0.75, CONFIG.COLORS.vest);
-        this.r(ctx, s * 0.28, s * 0.35, s * 0.44, 3, '#fff');
-        this.r(ctx, s * 0.15, s * 0.75, s * 0.7, 4, '#c96a00');
+        this.r(ctx, s * 0.34, 1, s * 0.32, s * 0.78, CONFIG.COLORS.vest);
+        this.r(ctx, s * 0.27, s * 0.34, s * 0.46, s * 0.14, '#fff');
+        this.r(ctx, s * 0.12, s * 0.76, s * 0.76, s * 0.2, CONFIG.COLORS.vestDark);
         break;
       case 'placa':
-        this.r(ctx, s * 0.45, s * 0.4, 3, s * 0.55, '#8a5a2b');
-        this.r(ctx, s * 0.1, 2, s * 0.8, s * 0.4, '#ffcc00');
-        ctx.strokeStyle = '#000'; ctx.lineWidth = 1;
-        ctx.strokeRect(s * 0.12, 3, s * 0.76, s * 0.36);
+        this.r(ctx, s * 0.45, s * 0.4, 3, s * 0.55, '#7a5326');
+        this.r(ctx, s * 0.1, 1, s * 0.8, s * 0.42, '#ffcc00');
+        ctx.strokeStyle = '#000'; ctx.lineWidth = 1.5; ctx.strokeRect(s * 0.12, 2, s * 0.76, s * 0.38);
+        this.r(ctx, s * 0.28, s * 0.1, s * 0.44, s * 0.22, '#000');
         break;
       case 'tampao':
         ctx.fillStyle = '#3a3f47';
-        ctx.beginPath(); ctx.arc(s / 2, s / 2, s * 0.42, 0, Math.PI * 2); ctx.fill();
-        ctx.strokeStyle = '#20242a'; ctx.lineWidth = 2; ctx.stroke();
-        this.r(ctx, s * 0.3, s * 0.47, s * 0.4, 2, '#20242a');
+        ctx.beginPath(); ctx.arc(s / 2, s / 2, s * 0.44, 0, 7); ctx.fill();
+        ctx.strokeStyle = '#20242a'; ctx.lineWidth = 2.5; ctx.stroke();
+        ctx.fillStyle = '#565c66';
+        ctx.beginPath(); ctx.arc(s / 2, s / 2, s * 0.30, 0, 7); ctx.fill();
+        this.r(ctx, s * 0.28, s * 0.47, s * 0.44, 2, '#20242a');
         break;
       case 'escora':
-        this.r(ctx, 2, 2, s - 4, 4, '#8a5a2b');
-        this.r(ctx, 2, s - 6, s - 4, 4, '#8a5a2b');
-        this.r(ctx, 4, 4, 4, s - 8, '#6b4a2b');
-        this.r(ctx, s - 8, 4, 4, s - 8, '#6b4a2b');
+        this.r(ctx, 1, 1, s - 2, 5, '#8a5a2b');
+        this.r(ctx, 1, s - 6, s - 2, 5, '#8a5a2b');
+        this.r(ctx, 4, 5, 5, s - 10, '#6b4a2b');
+        this.r(ctx, s - 9, 5, 5, s - 10, '#6b4a2b');
         break;
     }
   },
 
   itemCrate(ctx, x, y, type) {
     ctx.save(); ctx.translate(x, y);
-    ctx.fillStyle = 'rgba(0,0,0,0.25)'; ctx.fillRect(0, 26, 28, 4);
-    this.r(ctx, 0, 8, 28, 20, '#8a5a2b');
-    this.r(ctx, 0, 8, 28, 3, '#a06a34');
-    ctx.strokeStyle = '#5c3d1c'; ctx.lineWidth = 1; ctx.strokeRect(0, 8, 28, 20);
-    ctx.save(); ctx.translate(4, -8); this.itemIcon(ctx, type, 20); ctx.restore();
+    this.shadow(ctx, 18, 40, 20);
+    this.r(ctx, 0, 10, 36, 28, '#8a5a2b');
+    this.r(ctx, 0, 10, 36, 4, '#a06a34');
+    this.r(ctx, 0, 10, 4, 28, '#6b4a2b'); this.r(ctx, 32, 10, 4, 28, '#6b4a2b');
+    ctx.strokeStyle = '#5c3d1c'; ctx.lineWidth = 1.5; ctx.strokeRect(0, 10, 36, 28);
+    ctx.save(); ctx.translate(6, -8); this.itemIcon(ctx, type, 26); ctx.restore();
     ctx.restore();
   },
 
-  // ---- POWER-UP (retroescavadeira / sapinho) no chão ----
+  // ---- POWER-UP retroescavadeira ----
   powerup(ctx, x, y, kind, t) {
     ctx.save(); ctx.translate(x, y);
-    const bob = Math.sin(t * 0.1) * 3;
+    const bob = Math.sin(t * 0.1) * 4;
     ctx.translate(0, bob);
-    // brilho
     ctx.fillStyle = 'rgba(255,220,80,0.25)';
-    ctx.beginPath(); ctx.arc(16, 14, 22, 0, Math.PI * 2); ctx.fill();
-    if (kind === 'backhoe') {
-      this.r(ctx, 2, 14, 28, 12, CONFIG.COLORS.machine);
-      this.r(ctx, 6, 6, 12, 10, CONFIG.COLORS.machine);
-      this.r(ctx, 8, 8, 8, 6, '#bfe3ff');
-      ctx.fillStyle = '#1a1a1a';
-      ctx.beginPath(); ctx.arc(8, 28, 5, 0, Math.PI * 2); ctx.fill();
-      ctx.beginPath(); ctx.arc(24, 28, 6, 0, Math.PI * 2); ctx.fill();
-      this.r(ctx, 26, 12, 10, 3, CONFIG.COLORS.machineDark);
-    } else {
-      this.r(ctx, 12, 2, 5, 18, '#444');
-      this.r(ctx, 6, 16, 20, 8, CONFIG.COLORS.machine);
-      this.r(ctx, 4, 26, 24, 6, '#333');
-      this.r(ctx, 6, 16, 20, 2, '#ffe066');
-    }
+    ctx.beginPath(); ctx.arc(22, 20, 30, 0, 7); ctx.fill();
+    this.r(ctx, 4, 20, 38, 16, CONFIG.COLORS.machine);
+    this.r(ctx, 10, 8, 16, 14, CONFIG.COLORS.machine);
+    this.r(ctx, 13, 11, 11, 9, '#bfe3ff');
+    ctx.fillStyle = '#15181c';
+    ctx.beginPath(); ctx.arc(12, 38, 7, 0, 7); ctx.fill();
+    ctx.beginPath(); ctx.arc(32, 38, 8, 0, 7); ctx.fill();
+    this.r(ctx, 36, 16, 12, 4, CONFIG.COLORS.machineDark);
     ctx.restore();
   },
 
-  // ---- MONSTRO DE ESGOTO ----
+  // ---- MONSTRO DE ESGOTO — ~48px ----
   monster(ctx, x, y, t, kind, fleeing) {
     ctx.save(); ctx.translate(x, y);
-    const wobble = Math.sin(t * 0.15) * 2;
+    const wob = Math.sin(t * 0.15) * 3;
     const base = kind === 'grease' ? CONFIG.COLORS.grease : '#7a5a30';
     const dark = kind === 'grease' ? '#c9a94b' : '#573f1f';
+    this.shadow(ctx, 24, 46, 22);
     ctx.fillStyle = base;
     ctx.beginPath();
-    ctx.moveTo(0, 30);
-    ctx.quadraticCurveTo(0, 4 + wobble, 16, 4 + wobble);
-    ctx.quadraticCurveTo(32, 4 + wobble, 32, 30);
+    ctx.moveTo(0, 46);
+    ctx.quadraticCurveTo(-2, 6 + wob, 24, 4 + wob);
+    ctx.quadraticCurveTo(50, 6 + wob, 48, 46);
     ctx.closePath(); ctx.fill();
-    this.r(ctx, 4, 28, 5, 6 + wobble, base);
-    this.r(ctx, 22, 28, 5, 6 - wobble, base);
-    this.r(ctx, 8, 10, 6, 4, dark);
-    // olhos (assustados se fugindo)
-    this.r(ctx, 9, 14, 5, 5, '#fff');
-    this.r(ctx, 19, 14, 5, 5, '#fff');
+    // gotas
+    this.r(ctx, 6, 42, 7, 8 + wob, base);
+    this.r(ctx, 34, 42, 7, 8 - wob, base);
+    // manchas
+    ctx.fillStyle = dark;
+    ctx.beginPath(); ctx.arc(14, 20, 5, 0, 7); ctx.fill();
+    ctx.beginPath(); ctx.arc(34, 26, 4, 0, 7); ctx.fill();
+    // olhos
+    this.r(ctx, 12, 18, 8, 8, '#fff');
+    this.r(ctx, 28, 18, 8, 8, '#fff');
     if (fleeing) {
-      this.r(ctx, 10, 15, 3, 3, '#00f');
-      this.r(ctx, 20, 15, 3, 3, '#00f');
-      this.r(ctx, 12, 24, 8, 3, '#3a1a1a'); // boca "O"
+      this.r(ctx, 15, 20, 4, 4, '#0055ff'); this.r(ctx, 31, 20, 4, 4, '#0055ff');
+      ctx.fillStyle = '#3a1a1a'; ctx.beginPath(); ctx.arc(24, 36, 4, 0, 7); ctx.fill();
     } else {
-      this.r(ctx, 11, 16, 3, 3, '#b00');
-      this.r(ctx, 21, 16, 3, 3, '#b00');
-      this.r(ctx, 10, 23, 12, 3, '#3a1a1a');
+      this.r(ctx, 15, 21, 4, 4, '#b00'); this.r(ctx, 31, 21, 4, 4, '#b00');
+      this.r(ctx, 14, 33, 20, 4, '#3a1a1a');
+      this.r(ctx, 17, 33, 3, 4, '#fff'); this.r(ctx, 26, 33, 3, 4, '#fff'); // dentes
     }
     ctx.restore();
   },
 
-  // ---- SORGEI GUARIONE (vilão) ----
-  sorgei(ctx, x, y, facing, t, stunned) {
+  // ---- SORGEI GUARIONE — ~92px ----
+  sorgei(ctx, x, y, facing, t, ranting) {
     const C = CONFIG.COLORS;
     ctx.save(); ctx.translate(x, y);
     if (facing < 0) ctx.scale(-1, 1);
-    const step = Math.sin(t * 0.3) * 3;
-    this.r(ctx, -8, 36, 7, 14 - step, '#1a1a1a');
-    this.r(ctx, 2, 36, 7, 14 + step, '#1a1a1a');
-    this.r(ctx, -11, 12, 22, 26, '#5a1a1a');
-    this.r(ctx, -2, 12, 4, 26, '#fff');
-    this.r(ctx, -1, 14, 2, 14, '#111');
-    // braço apontando (mandão)
-    this.r(ctx, 9, 14, 12, 5, '#5a1a1a');
-    this.r(ctx, 20, 14, 5, 5, C.skin);
-    this.r(ctx, -7, 0, 14, 13, C.skin);
-    this.r(ctx, -8, -3, 16, 5, '#111');
-    this.r(ctx, -6, 5, 12, 3, '#111');
-    this.r(ctx, -4, 9, 8, 2, '#7a2a2a');
-    this.r(ctx, -8, -6, 2, 4, '#5a1a1a');
-    this.r(ctx, 6, -6, 2, 4, '#5a1a1a');
-    // estrelinhas de tonteira
-    if (stunned) {
-      ctx.fillStyle = '#ffd400'; ctx.font = 'bold 12px monospace';
-      const a = t * 0.3;
-      if (facing < 0) { ctx.save(); ctx.scale(-1, 1); ctx.fillText('✦', -6 + Math.cos(a) * 6, -10); ctx.restore(); }
-      else ctx.fillText('✦', -2 + Math.cos(a) * 6, -10);
-    }
+    const step = Math.sin(t * 0.3) * 5;
+    this.shadow(ctx, 0, 90, 24);
+    // pernas
+    this.limb(ctx, -12, 66, 11, 24 - step, '#1c1c1c', '#000');
+    this.limb(ctx, 3, 66, 11, 24 + step, '#1c1c1c', '#000');
+    this.r(ctx, -15, 88 - step, 16, 6, '#000');
+    this.r(ctx, 1, 88 + step, 16, 6, '#000');
+    // terno
+    this.r(ctx, -18, 36, 36, 34, '#5a1a1a');
+    this.r(ctx, 14, 36, 4, 34, '#3f1010');
+    this.r(ctx, -4, 34, 8, 34, '#f2f2f2');   // camisa
+    this.r(ctx, -1, 36, 2, 20, '#111');      // gravata
+    this.r(ctx, -3, 54, 4, 6, '#111');
+    // braço apontando
+    const arm = ranting ? Math.sin(t * 0.4) * 6 : 0;
+    this.limb(ctx, 12, 34 - arm, 16, 8, '#5a1a1a', '#3f1010');
+    this.r(ctx, 26, 34 - arm, 8, 8, C.skin);
+    // pescoço + cabeça
+    this.r(ctx, -6, 32, 12, 8, C.skinDark);
+    this.r(ctx, -13, 12, 26, 24, C.skin);
+    this.r(ctx, -13, 30, 26, 6, C.skinDark);
+    // cabelo engomado
+    this.r(ctx, -14, 8, 28, 8, '#111');
+    this.r(ctx, -14, 8, 6, 4, '#111');
+    // óculos escuros
+    this.r(ctx, -11, 18, 22, 6, '#111');
+    this.r(ctx, -11, 18, 9, 6, '#222'); this.r(ctx, 2, 18, 9, 6, '#222');
+    // boca
+    if (ranting) { ctx.fillStyle = '#3a0a0a'; ctx.beginPath(); ctx.arc(2, 30, 4, 0, 7); ctx.fill(); }
+    else this.r(ctx, -2, 29, 10, 2, '#7a2a2a');
     ctx.restore();
   },
 
-  // ---- FUNCIONÁRIO ----
-  // mode: 'lost' | 'follow' | 'work'
-  worker(ctx, x, y, t, mode) {
+  // ---- FUNCIONÁRIO — ~84px ----
+  // mode: 'lost' | 'follow' | 'work'   working: bool (bate picareta)
+  worker(ctx, x, y, t, mode, working) {
     const C = CONFIG.COLORS;
     ctx.save(); ctx.translate(x, y);
-    const bob = mode === 'follow' ? Math.sin(t * 0.1) * 1.5 : 0;
+    const bob = mode === 'follow' ? Math.sin(t * 0.12) * 2 : 0;
     ctx.translate(0, bob);
+    this.shadow(ctx, 0, 82, 20);
     // pernas
-    this.r(ctx, -6, 32, 5, 14, C.pants);
-    this.r(ctx, 1, 32, 5, 14, C.pants);
+    this.limb(ctx, -9, 58, 9, 22, C.pants, C.pantsDark);
+    this.limb(ctx, 2, 58, 9, 22, C.pants, C.pantsDark);
+    this.r(ctx, -11, 78, 13, 6, C.boot);
+    this.r(ctx, 1, 78, 13, 6, C.boot);
     // colete amarelo
-    this.r(ctx, -8, 14, 16, 20, '#ffd400');
-    this.r(ctx, -8, 22, 16, 2, '#fff');
-    // cabeça + capacete branco
-    this.r(ctx, -6, 2, 12, 12, C.skin);
-    this.r(ctx, -7, -1, 14, 6, '#f2f2f2');
+    this.r(ctx, -14, 32, 28, 30, C.workerVest);
+    this.r(ctx, 10, 32, 4, 30, C.workerVestDark);
+    this.r(ctx, -14, 42, 28, 4, C.reflect);
+    this.r(ctx, -14, 52, 28, 4, C.reflect);
+    // pescoço + cabeça
+    this.r(ctx, -5, 28, 10, 6, C.skinDark);
+    this.r(ctx, -11, 10, 22, 20, C.skin);
+    this.r(ctx, -11, 26, 22, 4, C.skinDark);
+    this.r(ctx, 3, 16, 4, 4, '#20242a'); // olho
+    // capacete branco
+    ctx.fillStyle = '#f2f2f2';
+    ctx.beginPath(); ctx.arc(0, 10, 13, Math.PI, 0); ctx.closePath(); ctx.fill();
+    this.r(ctx, -16, 12, 32, 4, '#d8d8d8');
 
-    if (mode === 'work') {
-      // batendo picareta (movimento cima/baixo)
-      const swing = Math.sin(t * 0.25);
-      const ang = swing * 0.9;
+    if (mode === 'work' && working) {
+      const swing = Math.sin(t * 0.28);
       ctx.save();
-      ctx.translate(6, 14);
-      ctx.rotate(-0.4 + ang);
-      this.r(ctx, 0, -2, 3, 20, '#8a5a2b');     // cabo
-      this.r(ctx, -6, -4, 16, 4, '#9aa3ad');    // cabeça de metal
+      ctx.translate(9, 34); ctx.rotate(-0.5 + swing * 1.0);
+      this.r(ctx, -2, -4, 4, 26, '#7a5326');
+      this.r(ctx, -10, -8, 22, 5, '#aab3bd');
+      this.r(ctx, -10, -8, 22, 2, '#cfd6de');
       ctx.restore();
-      // faíscas quando bate embaixo
-      if (swing > 0.7) {
-        ctx.fillStyle = '#ffd400';
-        this.r(ctx, 10, 40, 2, 2, '#ffd400');
-        this.r(ctx, 14, 38, 2, 2, '#fff');
-      }
+      if (swing > 0.75) { this.r(ctx, 16, 76, 3, 3, '#ffd400'); this.r(ctx, 21, 73, 2, 2, '#fff'); }
+    } else if (mode === 'work' && !working) {
+      // parado (sem cones) — braço coçando a cabeça
+      this.limb(ctx, 8, 34, 8, 12, C.workerVest, C.workerVestDark);
+      ctx.fillStyle = '#ff5a4d'; ctx.font = 'bold 16px monospace'; ctx.fillText('!', -3, 2);
     } else if (mode === 'lost') {
-      ctx.fillStyle = '#ffd400'; ctx.font = 'bold 14px monospace';
-      ctx.fillText('?', -4, -8);
+      ctx.fillStyle = '#ffd400'; ctx.font = 'bold 18px monospace'; ctx.fillText('?', -5, -6);
     }
     ctx.restore();
   },
 
-  // ---- OBRA / VALA com lista de materiais exigidos ----
+  // ---- OBRA / VALA + painel de materiais ----
   site(ctx, x, groundY, delivered, requirements) {
     const C = CONFIG.COLORS;
     ctx.save();
-    const trenchW = 130;
-    // vala
+    const trenchW = 170;
     this.r(ctx, x, groundY, trenchW, CONFIG.H - groundY, C.trench);
-    this.r(ctx, x, groundY, trenchW, 6, C.dirtDark);
-    this.r(ctx, x - 14, groundY - 8, 16, 8, C.dirt);
-    this.r(ctx, x + trenchW - 2, groundY - 8, 16, 8, C.dirt);
-    // escoramento nas laterais da vala
-    this.r(ctx, x + 4, groundY + 6, 4, CONFIG.H - groundY - 8, '#8a5a2b');
-    this.r(ctx, x + trenchW - 8, groundY + 6, 4, CONFIG.H - groundY - 8, '#8a5a2b');
+    this.r(ctx, x, groundY, trenchW, 8, C.dirtDark);
+    this.r(ctx, x - 18, groundY - 10, 20, 10, C.dirt);
+    this.r(ctx, x + trenchW - 2, groundY - 10, 20, 10, C.dirt);
+    // escoramentos
+    this.r(ctx, x + 6, groundY + 8, 5, CONFIG.H - groundY - 10, '#8a5a2b');
+    this.r(ctx, x + trenchW - 11, groundY + 8, 5, CONFIG.H - groundY - 10, '#8a5a2b');
 
-    // painel de materiais exigidos (acima da vala)
+    // painel de materiais
     const keys = Object.keys(requirements);
-    const panelW = 150;
-    const panelH = 22 + keys.length * 20;
+    const panelW = 190, panelH = 26 + keys.length * 24;
     const px = x + trenchW / 2 - panelW / 2;
-    const py = groundY - panelH - 74;
-    this.r(ctx, x + trenchW / 2 - 3, py + panelH, 6, 74, '#8a5a2b'); // poste
-    ctx.fillStyle = '#1c2530';
-    ctx.fillRect(px, py, panelW, panelH);
-    ctx.strokeStyle = '#ffcc00'; ctx.lineWidth = 2;
-    ctx.strokeRect(px, py, panelW, panelH);
-    ctx.fillStyle = '#ffcc00'; ctx.font = 'bold 12px monospace';
-    ctx.fillText('OBRA — MATERIAIS', px + 8, py + 15);
+    const py = groundY - panelH - 96;
+    this.r(ctx, x + trenchW / 2 - 4, py + panelH, 8, 96, '#7a5326');
+    ctx.fillStyle = '#16202b'; ctx.fillRect(px, py, panelW, panelH);
+    ctx.strokeStyle = '#ffcc00'; ctx.lineWidth = 3; ctx.strokeRect(px, py, panelW, panelH);
+    ctx.fillStyle = '#ffcc00'; ctx.font = 'bold 14px monospace';
+    ctx.fillText('OBRA — MATERIAIS', px + 10, py + 18);
     keys.forEach((k, i) => {
-      const ry = py + 24 + i * 20;
-      ctx.save(); ctx.translate(px + 8, ry); this.itemIcon(ctx, k, 16); ctx.restore();
-      const have = delivered[k] || 0;
-      const need = requirements[k];
-      ctx.fillStyle = have >= need ? '#7CFC00' : '#fff';
-      ctx.font = 'bold 13px monospace';
-      ctx.fillText((CONFIG.NAMES[k] || k) + ': ' + have + '/' + need, px + 30, ry + 13);
+      const ry = py + 30 + i * 24;
+      ctx.save(); ctx.translate(px + 10, ry); this.itemIcon(ctx, k, 20); ctx.restore();
+      const have = delivered[k] || 0, need = requirements[k];
+      ctx.fillStyle = have >= need ? '#7CFC00' : '#fff'; ctx.font = 'bold 15px monospace';
+      ctx.fillText((CONFIG.NAMES[k] || k) + ': ' + have + '/' + need, px + 38, ry + 16);
     });
 
-    // materiais entregues empilhados na vala
+    // materiais empilhados na vala
     let stack = 0;
-    for (const k of keys) {
-      for (let i = 0; i < (delivered[k] || 0); i++) {
-        const col = stack % 4, row = Math.floor(stack / 4);
-        ctx.save(); ctx.translate(x + 10 + col * 28, groundY + 16 + row * 14);
-        this.itemIcon(ctx, k, 16); ctx.restore();
-        stack++;
-      }
+    for (const k of keys) for (let i = 0; i < (delivered[k] || 0); i++) {
+      const col = stack % 5, row = Math.floor(stack / 5);
+      ctx.save(); ctx.translate(x + 12 + col * 30, groundY + 20 + row * 18);
+      this.itemIcon(ctx, k, 20); ctx.restore(); stack++;
     }
-
     // fita zebrada
-    for (let i = 0; i < trenchW; i += 16) {
-      ctx.fillStyle = i % 32 === 0 ? '#ffcc00' : '#000';
-      ctx.fillRect(x + i, groundY - 2, 16, 3);
+    for (let i = 0; i < trenchW; i += 20) {
+      ctx.fillStyle = i % 40 === 0 ? '#ffcc00' : '#000';
+      ctx.fillRect(x + i, groundY - 3, 20, 4);
     }
     ctx.restore();
   },
