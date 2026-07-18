@@ -1,0 +1,134 @@
+:root {
+  --azul: #1e6fd0;
+  --laranja: #ff7a00;
+  --laranja-fluor: #ff8c1a;
+  --asfalto: #2b2f36;
+  --lodo: #6b8e23;
+  --areia: #d9c9a3;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  height: 100%;
+  background: #0f1216;
+  color: #e8eef5;
+  font-family: "Segoe UI", system-ui, sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 12px;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+h1 {
+  font-size: 22px;
+  letter-spacing: 2px;
+  color: var(--laranja-fluor);
+  text-shadow: 0 2px 0 #000;
+}
+h1 span { color: var(--azul); }
+
+#game-wrap {
+  position: relative;
+  border: 4px solid #000;
+  border-radius: 8px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
+  line-height: 0;
+  max-width: 100%;
+}
+
+canvas {
+  display: block;
+  image-rendering: pixelated;
+  background: #6ec6ff;
+  max-width: 100%;
+  height: auto;
+  touch-action: none;
+}
+
+/* Overlays (start / pause / gameover) */
+.overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  background: rgba(8, 12, 18, 0.82);
+  color: #fff;
+  text-align: center;
+  padding: 24px;
+  backdrop-filter: blur(2px);
+}
+.overlay.hidden { display: none; }
+
+.overlay h2 {
+  font-size: 30px;
+  color: var(--laranja-fluor);
+  text-shadow: 0 3px 0 #000;
+}
+.overlay p { max-width: 460px; line-height: 1.5; font-size: 15px; }
+.overlay .big { font-size: 20px; color: #ffd479; }
+
+.btn {
+  background: var(--laranja);
+  color: #000;
+  border: none;
+  border-radius: 6px;
+  padding: 12px 26px;
+  font-size: 17px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 0 #a34e00;
+  transition: transform .05s;
+}
+.btn:active { transform: translateY(3px); box-shadow: 0 1px 0 #a34e00; }
+
+.controls-help {
+  font-size: 13px;
+  color: #b9c4d0;
+  line-height: 1.7;
+}
+.controls-help kbd {
+  background: #222a33;
+  border: 1px solid #3a444f;
+  border-bottom-width: 3px;
+  border-radius: 4px;
+  padding: 1px 7px;
+  font-family: monospace;
+  color: #ffd479;
+}
+
+footer {
+  font-size: 12px;
+  color: #6a7683;
+}
+
+/* Mobile touch controls */
+#touch {
+  display: none;
+  gap: 10px;
+  width: 100%;
+  max-width: 900px;
+  justify-content: space-between;
+  margin-top: 4px;
+}
+#touch .pad { display: flex; gap: 10px; }
+#touch button {
+  width: 62px; height: 62px;
+  border-radius: 50%;
+  border: 2px solid #000;
+  background: #222a33;
+  color: #ffd479;
+  font-size: 22px;
+  font-weight: 700;
+}
+#touch button:active { background: var(--laranja); color: #000; }
+@media (hover: none) and (pointer: coarse) {
+  #touch { display: flex; }
+}

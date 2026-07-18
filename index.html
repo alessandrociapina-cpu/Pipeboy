@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pipeboy — George Sanear</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <h1>🦺 PIPE<span>BOY</span></h1>
+
+  <div id="game-wrap">
+    <canvas id="game" width="900" height="480"></canvas>
+
+    <!-- Tela inicial -->
+    <div id="overlay-start" class="overlay">
+      <h2>PIPEBOY</h2>
+      <p>
+        Você é <b>George Sanear</b>, engenheiro de saneamento. Leve os
+        <b>tubos de água</b> 🔵 até a <b>obra com vala aberta</b> 🚧, resgate os
+        <b>funcionários perdidos</b> 👷, enfrente os <b>monstros de esgoto</b> 💩
+        e sobreviva ao empreiteiro maluco <b>Regis Guarione</b> 😈.
+      </p>
+      <div class="controls-help">
+        <kbd>←</kbd> <kbd>→</kbd> mover &nbsp;•&nbsp; <kbd>Espaço</kbd> pular
+        &nbsp;•&nbsp; <kbd>J</kbd> atacar &nbsp;•&nbsp; <kbd>K</kbd> pegar / entregar
+        &nbsp;•&nbsp; <kbd>P</kbd> pausar
+      </div>
+      <button class="btn" id="btn-start">▶ COMEÇAR OBRA</button>
+    </div>
+
+    <!-- Tela de pausa -->
+    <div id="overlay-pause" class="overlay hidden">
+      <h2>PAUSA</h2>
+      <p>Obra paralisada. Aperte <kbd>P</kbd> para retomar.</p>
+    </div>
+
+    <!-- Tela de fim -->
+    <div id="overlay-end" class="overlay hidden">
+      <h2 id="end-title">FIM</h2>
+      <p id="end-msg" class="big"></p>
+      <button class="btn" id="btn-restart">↻ NOVA OBRA (Enter)</button>
+    </div>
+  </div>
+
+  <!-- Controles touch (mobile) -->
+  <div id="touch">
+    <div class="pad">
+      <button data-key="ArrowLeft">◀</button>
+      <button data-key="ArrowRight">▶</button>
+    </div>
+    <div class="pad">
+      <button data-key="KeyJ">⛏️</button>
+      <button data-key="KeyK">✋</button>
+      <button data-key="Space">⤴</button>
+    </div>
+  </div>
+
+  <footer>Pipeboy • protótipo v1 — inspirado no universo das obras de saneamento</footer>
+
+  <!-- ordem importa: config → sprites → entities → game → input → boot -->
+  <script src="js/config.js"></script>
+  <script src="js/sprites.js"></script>
+  <script src="js/entities.js"></script>
+  <script src="js/game.js"></script>
+  <script src="js/input.js"></script>
+  <script src="js/boot.js"></script>
+</body>
+</html>
