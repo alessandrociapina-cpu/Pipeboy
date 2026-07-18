@@ -2,8 +2,20 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Pipeboy — George Sanear</title>
+
+  <!-- PWA -->
+  <link rel="manifest" href="manifest.webmanifest" />
+  <meta name="theme-color" content="#ff8c1a" />
+  <meta name="description" content="Jogo side-scroller de saneamento: leve tubos de água até as obras, resgate funcionários e fuja do empreiteiro Regis Guarione." />
+  <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png" />
+  <link rel="apple-touch-icon" href="icons/icon-192.png" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Pipeboy" />
+  <meta name="mobile-web-app-capable" content="yes" />
+
   <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
@@ -65,5 +77,16 @@
   <script src="js/game.js"></script>
   <script src="js/input.js"></script>
   <script src="js/boot.js"></script>
+
+  <!-- registro do Service Worker (PWA offline) -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('sw.js').catch((err) => {
+          console.warn('Falha ao registrar o Service Worker:', err);
+        });
+      });
+    }
+  </script>
 </body>
 </html>

@@ -16,6 +16,27 @@ nem etapa de build, e sem imagens externas — toda a arte é desenhada via cód
 > Dica: para desenvolvimento, servir a pasta com um servidor local também funciona
 > (`python3 -m http.server`), mas o jogo roda abrindo o `index.html` diretamente.
 
+## 📱 App instalável (PWA)
+
+O Pipeboy é um **PWA (Progressive Web App)**: dá para abrir por um link e
+**instalar como app** no celular ou no computador, com ícone na tela inicial e
+funcionamento **offline** (o jogo fica em cache no primeiro acesso).
+
+**Publicar no GitHub Pages (link público):**
+1. No GitHub, vá em **Settings → Pages**.
+2. Em **Build and deployment → Source**, escolha **GitHub Actions**.
+3. Faça o merge deste PR na branch `main` (ou rode o workflow manualmente em
+   **Actions → Deploy Pipeboy → Run workflow**).
+4. O app ficará disponível em:
+   `https://alessandrociapina-cpu.github.io/Pipeboy/`
+
+**Instalar como app:**
+- **Android/Chrome:** abra o link → menu **⋮** → *Instalar aplicativo* / *Adicionar à tela inicial*.
+- **iOS/Safari:** abra o link → botão **Compartilhar** → *Adicionar à Tela de Início*.
+- **Desktop (Chrome/Edge):** ícone de **instalar** na barra de endereço.
+
+Depois de instalado, abre em tela cheia como qualquer app, mesmo sem internet.
+
 ## 🎮 Controles
 
 | Ação | Tecla |
